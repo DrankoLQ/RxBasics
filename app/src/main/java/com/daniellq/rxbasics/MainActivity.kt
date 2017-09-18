@@ -11,7 +11,6 @@ import com.daniellq.rxbasics.api.ApiService
 import com.daniellq.rxbasics.model.GithubUser
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
@@ -19,14 +18,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var btnGetData: Button
 
     val restApi: ApiService = ApiClient().getApiService()
-    var compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
         btnGetData.setOnClickListener {
-            val subscription = getUser()
+            getUser()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -36,7 +34,6 @@ class MainActivity : AppCompatActivity() {
                             { e ->
                                 Toast.makeText(this, e.localizedMessage, Toast.LENGTH_SHORT).show()
                             })
-            compositeDisposable.addAll(subscription)
         }
     }
 
