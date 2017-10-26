@@ -4,6 +4,7 @@ package com.daniellq.rxbasics.model
  * Created by dani on 13/9/17.
  */
 class GithubUser(val name: String,
+                 val login: String,
                  val location: String,
                  val email: String,
                  val bio: String,

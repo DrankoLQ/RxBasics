@@ -11,6 +11,8 @@ import butterknife.ButterKnife
 class MainActivity : AppCompatActivity(), IMainView {
     @BindView(R.id.btnGetData)
     lateinit var btnGetData: Button
+    @BindView(R.id.btnGetEmailFromUser)
+    lateinit var btnGetEmailFromUse: Button
     @BindView(R.id.fetchStatus)
     lateinit var fetchStatus: TextView
 
@@ -23,6 +25,9 @@ class MainActivity : AppCompatActivity(), IMainView {
         btnGetData.setOnClickListener {
             mPresenter.fetchData()
         }
+        btnGetEmailFromUse.setOnClickListener( {
+            mPresenter.fetchUserFollowers()
+        })
     }
 
     override fun setStatus(status: String) {
