@@ -41,6 +41,7 @@ dependencies {
     // Retrofit
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     compile "com.squareup.okhttp3:logging-interceptor:$okhttp_interceptor_version"
 
     // Butterknife

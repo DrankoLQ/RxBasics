@@ -1,7 +1,7 @@
 package com.daniellq.rxbasics.api
 
 import com.daniellq.rxbasics.model.GithubUser
-import retrofit2.Call
+import io.reactivex.Observable
 import retrofit2.http.GET
 
 /**
@@ -10,5 +10,5 @@ import retrofit2.http.GET
 
 interface ApiService {
     @GET("/users/drankolq")
-    fun getGithubUser(): Call<GithubUser>
+    fun getGithubUser(): Observable<GithubUser>
 }
