@@ -20,6 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
@@ -32,7 +36,11 @@ dependencies {
 
     // Android Support
     compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:recyclerview-v7:$support_version"
     compile "com.android.support.constraint:constraint-layout:$constraint_version"
+
+    // Play services
+    compile "com.google.android.gms:play-services-location:$play_services_version"
 
     // Rx
     compile "io.reactivex.rxjava2:rxjava:$rxjava_version"

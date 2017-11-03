@@ -1,7 +1,10 @@
 package com.daniellq.rxbasics
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import com.daniellq.rxbasics.api.ApiClient
 import com.daniellq.rxbasics.api.ApiService
+import com.daniellq.rxbasics.bluetooth.RxBluetoothManager
 import com.daniellq.rxbasics.model.GithubUser
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -10,8 +13,9 @@ import io.reactivex.schedulers.Schedulers
  * Created by dani on 26/10/17.
  */
 
-data class MainPresenter(val mView: IMainView) : IMainPresenter {
+data class MainPresenter(val mView: IMainView, val bluetoothAdapter: BluetoothAdapter) : IMainPresenter {
     val restApi: ApiService = ApiClient().getApiService()
+    val bluetothManager = RxBluetoothManager(bluetoothAdapter)
 
     override fun fetchData() {
         mView.setStatus("Fetching data...")
@@ -56,9 +60,27 @@ data class MainPresenter(val mView: IMainView) : IMainPresenter {
                         }
                 )
     }
+
+    override fun scanBluetooth() {
+        mView.clearRecyclerView()
+        mView.changeButtonState("Scanning devices...")
+        mView.showLoader()
+        bluetothManager.scanDevices()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ device: BluetoothDevice ->
+                    mView.onDeviceScanned(device.address)
+                }, {
+
+                }, {
+                    mView.hideLoader()
+                    mView.changeButtonState("Scan bluetooth devices")
+                })
+    }
 }
 
 interface IMainPresenter {
     fun fetchData()
     fun fetchUserFollowers()
+    fun scanBluetooth()
 }
