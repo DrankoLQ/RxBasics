@@ -1,4 +1,4 @@
-package com.daniellq.rxbasics
+package com.daniellq.rxbasics.presenter
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -6,6 +6,7 @@ import com.daniellq.rxbasics.api.ApiClient
 import com.daniellq.rxbasics.api.ApiService
 import com.daniellq.rxbasics.bluetooth.RxBluetoothManager
 import com.daniellq.rxbasics.model.GithubUser
+import com.daniellq.rxbasics.view.IMainView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -77,10 +78,4 @@ data class MainPresenter(val mView: IMainView, val bluetoothAdapter: BluetoothAd
                     mView.changeButtonState("Scan bluetooth devices")
                 })
     }
-}
-
-interface IMainPresenter {
-    fun fetchData()
-    fun fetchUserFollowers()
-    fun scanBluetooth()
 }

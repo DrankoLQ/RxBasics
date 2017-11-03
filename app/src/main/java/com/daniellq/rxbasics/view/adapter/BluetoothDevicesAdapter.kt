@@ -1,10 +1,11 @@
-package com.daniellq.rxbasics
+package com.daniellq.rxbasics.view.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.daniellq.rxbasics.R
 
 /**
  * Created by dani on 2/11/17.
@@ -12,12 +13,12 @@ import android.widget.TextView
 
 class BluetoothDevicesAdapter(val arrayList: ArrayList<String>) : RecyclerView.Adapter<BluetoothDevicesAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BluetoothDevicesAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.bluetooth_device_item, parent, false)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: BluetoothDevicesAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItems(arrayList[position])
     }
 

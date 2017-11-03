@@ -1,4 +1,4 @@
-package com.daniellq.rxbasics
+package com.daniellq.rxbasics.view
 
 import android.Manifest
 import android.app.Activity
@@ -24,6 +24,9 @@ import android.widget.TextView
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.daniellq.rxbasics.view.adapter.BluetoothDevicesAdapter
+import com.daniellq.rxbasics.R
+import com.daniellq.rxbasics.presenter.MainPresenter
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.location.*
@@ -209,14 +212,4 @@ class MainActivity : AppCompatActivity(), IMainView, LocationListener {
     override fun hideLoader() {
         progressBar.visibility = View.INVISIBLE
     }
-}
-
-interface IMainView {
-    fun setStatus(status: String)
-    fun showToast(message: String)
-    fun clearRecyclerView()
-    fun onDeviceScanned(deviceAddres: String)
-    fun changeButtonState(state: String)
-    fun showLoader()
-    fun hideLoader()
 }
