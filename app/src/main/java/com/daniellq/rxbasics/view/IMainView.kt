@@ -7,7 +7,7 @@ interface IMainView {
     fun setStatus(status: String)
     fun showToast(message: String)
     fun clearRecyclerView()
-    fun onDeviceScanned(deviceAddres: String)
+    fun onDeviceScanned(deviceAddres: String?)
     fun changeButtonState(state: String)
     fun showLoader()
     fun hideLoader()

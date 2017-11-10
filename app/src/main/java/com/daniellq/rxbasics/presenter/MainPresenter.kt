@@ -1,22 +1,25 @@
 package com.daniellq.rxbasics.presenter
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
+import android.util.Log
 import com.daniellq.rxbasics.api.ApiClient
 import com.daniellq.rxbasics.api.ApiService
-import com.daniellq.rxbasics.bluetooth.RxBluetoothManager
 import com.daniellq.rxbasics.model.GithubUser
 import com.daniellq.rxbasics.view.IMainView
+import com.polidea.rxandroidble.RxBleClient
+import com.polidea.rxandroidble.scan.ScanResult
+import com.polidea.rxandroidble.scan.ScanSettings
+import hu.akarnokd.rxjava.interop.RxJavaInterop
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by dani on 26/10/17.
  */
 
-data class MainPresenter(val mView: IMainView, val bluetoothAdapter: BluetoothAdapter) : IMainPresenter {
+data class MainPresenter(val mView: IMainView, val rxBleClient: RxBleClient?) : IMainPresenter {
     val restApi: ApiService = ApiClient().getApiService()
-    val bluetothManager = RxBluetoothManager(bluetoothAdapter)
+    val scanSubscription = RxJavaInterop.toV2Observable(rxBleClient?.scanBleDevices(ScanSettings.Builder().build()))
 
     override fun fetchData() {
         mView.setStatus("Fetching data...")
@@ -66,16 +69,23 @@ data class MainPresenter(val mView: IMainView, val bluetoothAdapter: BluetoothAd
         mView.clearRecyclerView()
         mView.changeButtonState("Scanning devices...")
         mView.showLoader()
-        bluetothManager.scanDevices()
+        scanSubscription
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ device: BluetoothDevice ->
-                    mView.onDeviceScanned(device.address)
-                }, {
+                .subscribe({ t: ScanResult? ->
+                    mView.onDeviceScanned(t?.bleDevice?.macAddress)
+                }, { t: Throwable? ->
+                    Log.d("onError", "Error: ${t?.localizedMessage}")
+                })
 
-                }, {
+        // Unsubcribe after 5 seconds
+        scanSubscription.delay(5, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    scanSubscription.unsubscribeOn(Schedulers.io())
                     mView.hideLoader()
                     mView.changeButtonState("Scan bluetooth devices")
-                })
+                }
     }
 }

@@ -24,12 +24,13 @@ import android.widget.TextView
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.daniellq.rxbasics.view.adapter.BluetoothDevicesAdapter
 import com.daniellq.rxbasics.R
 import com.daniellq.rxbasics.presenter.MainPresenter
+import com.daniellq.rxbasics.view.adapter.BluetoothDevicesAdapter
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.location.*
+import com.polidea.rxandroidble.RxBleClient
 
 class MainActivity : AppCompatActivity(), IMainView, LocationListener {
     @BindView(R.id.btnGetData)
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity(), IMainView, LocationListener {
     private var mLocationRequest: LocationRequest? = null
     private var mCurrentLocation: Location? = null
     private var mBluetoothAdapter: BluetoothAdapter? = null
+    private var rxBleClient: RxBleClient? = null
 
     private lateinit var mPresenter: MainPresenter
 
@@ -157,7 +159,8 @@ class MainActivity : AppCompatActivity(), IMainView, LocationListener {
     }
 
     private fun setupActivity() {
-        mPresenter = MainPresenter(this, mBluetoothAdapter!!)
+        rxBleClient = RxBleClient.create(this)
+        mPresenter = MainPresenter(this, rxBleClient)
         btnGetData.setOnClickListener {
             mPresenter.fetchData()
         }
@@ -191,8 +194,8 @@ class MainActivity : AppCompatActivity(), IMainView, LocationListener {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onDeviceScanned(deviceAddres: String) {
-        devices.add(deviceAddres)
+    override fun onDeviceScanned(deviceAddres: String?) {
+        deviceAddres?.let { devices.add(it) }
         mAdapter.notifyDataSetChanged()
     }
 
